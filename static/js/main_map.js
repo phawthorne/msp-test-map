@@ -1,4 +1,4 @@
-const mapboxAccessToken = 'pk.eyJ1IjoicGhhd3Rob3JuZSIsImEiOiJja2F5ZXBpbzgwaTkyMnRvYWV2OGE5bGs2In0.rN3rLLwuUnA5D4QHDgsPjg';
+const mapboxAccessToken = 'sk.eyJ1IjoicGhhd3Rob3JuZSIsImEiOiJja2F5aGxxZm8wamVhMnhzOGFiazJ3ajVkIn0.SCkw2StsCcK38QmFmaFJ6w';
 let mspmap = L.map('main-map').setView([44.9778, -93.2650], 11);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
