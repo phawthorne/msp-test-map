@@ -36,16 +36,20 @@ const getColor = (d) => {
 const style = (feature) => {
   return {
     fillColor: getColor(feature.properties.OBJECTID),
-    weight: 1,
+    weight: 0,
     opacity: 0.5,
     color: 'white',
     dashArray: '3',
-    fillOpacity: 0.7
+    fillOpacity: 0.5
   };
 }
 
 let cbOverlay = L.layerGroup();
-let overlays = {"Census blocks": cbOverlay};
+let hexOverlay = L.layerGroup();
+let overlays = {
+  "Census blocks": cbOverlay,
+  "Grid": hexOverlay
+};
 
 
 let mspmap = L.map('main-map', {
@@ -54,11 +58,18 @@ let mspmap = L.map('main-map', {
   layers: [lightMap, cbOverlay]
 });
 
-shapeFile = "static/data/census_bg.geojson";
-fetch(shapeFile)
+censusBlocksFile = "static/data/census_bg.geojson";
+fetch(censusBlocksFile)
   .then(response => response.json())
   .then(data => {
     L.geoJson(data, {style: style}).addTo(cbOverlay);
-    L.control.layers(baseLayers, overlays).addTo(mspmap);
   });
 
+hexMspFile = "static/data/hex_msp.geojson";
+fetch(hexMspFile)
+  .then(response => response.json())
+  .then(data => {
+    L.geoJson(data, {style: style}).addTo(hexOverlay);
+  });
+
+L.control.layers(baseLayers, overlays).addTo(mspmap);
