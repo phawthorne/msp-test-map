@@ -10,13 +10,13 @@ html, body, input, select, button, textarea, table {
 }
 
 body {
-	line-height: 1.5;
+	line-height: 1.25;
 	color: black;
 	background-color: white;
 }
 
 p {
-	margin: 24px 0;
+	margin: 12px 0;
 }
 
 a, a span.hljs-string {
@@ -96,13 +96,13 @@ h2 {
 	font-size: 2em;
 	font-weight: 300;
 	color: black;
-	margin-top: 1.6em;
+	margin-top: 0.5em;
 	padding-top: .2em;
 }
 
-h2:first-child {
+/* h2:first-child {
 	margin-top: 1em;
-}
+} */
 
 h2:target {
 	color: #1EB300;

@@ -33,7 +33,7 @@ const getColor = (d) => {
   return chlorocolors[parseInt(idChar)];
 }
 
-const style = (feature) => {
+const distanceStyle = (feature) => {
   return {
     fillColor: getColor(feature.properties.OBJECTID),
     weight: 0,
@@ -43,21 +43,49 @@ const style = (feature) => {
     fillOpacity: 0.5
   };
 }
+const farmersMarketMarkerStyle = {
+  radius: 5,
+  fillColor: "#228800",
+  color: "#000",
+  weight: 1,
+  opacity: 1,
+  fillOpacity: 0.8
+};
+const superMarketMarkerStyle = {
+  radius: 5,
+  fillColor: "#ff7800",
+  color: "#000",
+  weight: 1,
+  opacity: 1,
+  fillOpacity: 0.8
+};
 
-let cbOverlay = L.layerGroup();
-let hexOverlay = L.layerGroup();
-let farmersMarkets = L.layerGroup();
+
+let cbOverlay = L.geoJSON();
+let hexOverlay = L.geoJSON();
+let farmersMarkets = L.geoJSON(null, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, farmersMarketMarkerStyle);
+  }
+});
+let superMarkets = L.geoJSON(null, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, superMarketMarkerStyle);
+  }
+});
+
 const overlays = {
   "Aggregation Layers": {
     "Census blocks": cbOverlay,
     "Grid": hexOverlay
   },
   "Food sources (?)": {
-    "Farmers markets": farmersMarkets
+    "Farmers markets": farmersMarkets,
+    "Supermarkets": superMarkets
   }
 };
 const overlayOptions = {
-  exclusiveGroups:["Aggregation Layers"]
+  // exclusiveGroups:["Aggregation Layers"]
 }
 
 
@@ -72,15 +100,31 @@ censusBlocksFile = "static/data/census_bg.geojson";
 fetch(censusBlocksFile)
   .then(response => response.json())
   .then(data => {
-    L.geoJson(data, {style: style}).addTo(cbOverlay);
+    cbOverlay.addData(data);
+    cbOverlay.setStyle(distanceStyle);
   });
 
 hexMspFile = "static/data/hex_msp.geojson";
 fetch(hexMspFile)
   .then(response => response.json())
   .then(data => {
-    L.geoJson(data, {style: style}).addTo(hexOverlay);
+    hexOverlay.addData(data);
+    hexOverlay.setStyle(distanceStyle);
   });
+
+farmersMarketsFile = "static/data/MSP_Farmers_Markets.geojson";
+fetch(farmersMarketsFile)
+  .then(response => response.json())
+  .then(data => {
+    farmersMarkets.addData(data);
+  });
+
+supermarketsFile = "static/data/ESRI_Supermarkets.geojson";
+fetch(supermarketsFile)
+  .then(response => response.json())
+  .then(data => {
+    superMarkets.addData(data);
+  })
 
 let layerControl = L.control.groupedLayers(baseLayers, overlays, overlayOptions);
 mspmap.addControl(layerControl);
