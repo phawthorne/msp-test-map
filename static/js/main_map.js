@@ -46,10 +46,20 @@ const style = (feature) => {
 
 let cbOverlay = L.layerGroup();
 let hexOverlay = L.layerGroup();
-let overlays = {
-  "Census blocks": cbOverlay,
-  "Grid": hexOverlay
+let farmersMarkets = L.layerGroup();
+const overlays = {
+  "Aggregation Layers": {
+    "Census blocks": cbOverlay,
+    "Grid": hexOverlay
+  },
+  "Food sources (?)": {
+    "Farmers markets": farmersMarkets
+  }
 };
+const overlayOptions = {
+  exclusiveGroups:["Aggregation Layers"]
+}
+
 
 
 let mspmap = L.map('main-map', {
@@ -72,4 +82,5 @@ fetch(hexMspFile)
     L.geoJson(data, {style: style}).addTo(hexOverlay);
   });
 
-L.control.layers(baseLayers, overlays).addTo(mspmap);
+let layerControl = L.control.groupedLayers(baseLayers, overlays, overlayOptions);
+mspmap.addControl(layerControl);
